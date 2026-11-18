@@ -53,7 +53,7 @@ module.exports = {
     run: () => "📅 " + new Date().toLocaleDateString()
   },
 
-  8ball: {
+  "8ball": {
     category: "Tools",
     description: "Ask the magic 8 ball",
     run: () => {
