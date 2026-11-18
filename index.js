@@ -40,8 +40,4 @@ const terminal = readline.createInterface({
 });
 
 console.log("X SONU Command Engine Started!");
-console.log("Try .ping or .menu");
-
-terminal.on("line", (message) => {
-  console.log(handleCommand(message));
-});
+console.log("Try 
