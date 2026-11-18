@@ -1,0 +1,31 @@
+
+name: X SONU - Node.js Test
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check JavaScript files
+        run: |
+          node --check index.js
+          node --check commands/basic.js
+          node --check commands/fun.js
+          node --check commands/tools.js
+
+      - name: Check command modules
+        run: |
+          node -e "for (const f of ['./commands/basic','./commands/fun','./commands/tools']) { const c = require(f); if (!c || typeof c !== 'object') throw new Error(f + ' is invalid'); console.log(f + ' OK'); }"
