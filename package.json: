@@ -1,0 +1,11 @@
+
+{
+  "name": "x-sonu",
+  "version": "1.0.0",
+  "description": "X Sonu multi-user bot command engine",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {}
+}
