@@ -1,43 +1,67 @@
 
+const PREFIX = ".";
+
+const basicCommands = require("./commands/basic");
+const funCommands = require("./commands/fun");
+const toolsCommands = require("./commands/tools");
+
 const commands = {
-  ping: () => "Pong! X Sonu is alive.",
-  alive: () => "X Sonu is running!",
-  owner: () => "Bot Owner: SONU",
-  help: () => "Use .menu to see commands.",
-  menu: () => `
-╭━━━〔 X SONU 〕━━━╮
-┃ .ping
-┃ .alive
-┃ .owner
-┃ .help
-┃ .menu
-╰━━━━━━━━━━━━━━╯
-`
+  ...basicCommands,
+  ...funCommands,
+  ...toolsCommands
 };
 
-function handleCommand(message) {
+function handleCommand(message, userId = "test-user") {
   const input = message.trim();
 
-  if (!input.startsWith(".")) {
-    return "Not a command.";
+  if (!input.startsWith(PREFIX)) return null;
+
+  const parts = input.slice(PREFIX.length).trim().split(/\s+/);
+  const name = parts.shift().toLowerCase();
+
+  const command = commands[name];
+
+  if (!command) return "❌ Unknown command. Type .help";
+
+  try {
+    return command.run(parts, userId);
+  } catch (error) {
+    console.error(error);
+    return "⚠️ Command error.";
   }
-
-  const name = input.slice(1).split(/\s+/)[0].toLowerCase();
-
-  if (!commands[name]) {
-    return "Unknown command. Type .menu";
-  }
-
-  return commands[name]();
 }
 
-// Local testing
-const readline = require("readline");
+function showMenu() {
+  const categories = {};
 
+  for (const [name, command] of Object.entries(commands)) {
+    categories[command.category] ??= [];
+    categories[command.category].push(name);
+  }
+
+  let output = "╭━━━〔 X SONU 〕━━━╮\n";
+
+  for (const [category, names] of Object.entries(categories)) {
+    output += `\n❖ ${category.toUpperCase()}\n`;
+    output += names.map(name => PREFIX + name).join("\n") + "\n";
+  }
+
+  return output + "\n╰━━━━━━━━━━━━━━╯";
+}
+
+console.log("X SONU COMMAND ENGINE READY!");
+console.log(Object.keys(commands).length + " commands loaded.");
+
+const readline = require("readline");
 const terminal = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
 
-console.log("X SONU Command Engine Started!");
-console.log("Try 
+terminal.on("line", message => {
+  console.log(
+    message.trim() === ".menu"
+      ? showMenu()
+      : handleCommand(message) || ""
+  );
+});
