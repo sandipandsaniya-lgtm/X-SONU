@@ -25,7 +25,7 @@ jobs:
           node --check commands/basic.js
           node --check commands/fun.js
           node --check commands/tools.js
-
+          node --check telegram.js
       - name: Check command modules
         run: |
           node -e "for (const f of ['./commands/basic','./commands/fun','./commands/tools']) { const c = require(f); if (!c || typeof c !== 'object') throw new Error(f + ' is invalid'); console.log(f + ' OK'); }"
